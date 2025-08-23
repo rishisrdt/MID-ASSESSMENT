@@ -1,126 +1,61 @@
-Postman testing (step-by-step)
-A) Create a Department with Employees
-
-Request
-
-POST http://localhost:8080/api/departments
-Content-Type: application/json
-
-
-Body
+Method: POST
+URL: http://localhost:8080/departments
 
 {
-  "deptName": "Engineering",
-  "employees": [
-    { "empName": "Alice Singh", "empEmail": "alice@example.com" },
-    { "empName": "Ravi Kumar",  "empEmail": "ravi@example.com" }
-  ]
-}
-
-
-Expected 200 Response (example)
-
-{
-  "deptId": 1,
-  "deptName": "Engineering",
+  "deptName": "IT Department",
   "employees": [
     {
-      "empId": 1,
-      "empName": "Alice Singh",
-      "empEmail": "alice@example.com",
-      "latestDeptId": 1,
-      "latestDeptName": "Engineering"
+      "empName": "Ravi Kumar",
+      "empEmail": "ravi.kumar@example.com"
     },
     {
-      "empId": 2,
-      "empName": "Ravi Kumar",
-      "empEmail": "ravi@example.com",
-      "latestDeptId": 1,
-      "latestDeptName": "Engineering"
+      "empName": "Anita Sharma",
+      "empEmail": "anita.sharma@example.com"
     }
   ]
 }
 
-B) Get all employees currently under a department
-
-Request
-
-GET http://localhost:8080/api/departments/1/employees
 
 
-Response
+Method: GET
+URL: http://localhost:8080/employees/department/1
 
 [
   {
     "empId": 1,
-    "empName": "Alice Singh",
-    "empEmail": "alice@example.com",
-    "latestDeptId": 1,
-    "latestDeptName": "Engineering"
+    "empName": "Ravi Kumar",
+    "empEmail": "ravi.kumar@example.com",
+    "assignedDate": "2025-08-23T16:00:00",
+    "department": {
+      "deptId": 1,
+      "deptName": "IT Department"
+    }
   },
   {
     "empId": 2,
-    "empName": "Ravi Kumar",
-    "empEmail": "ravi@example.com",
-    "latestDeptId": 1,
-    "latestDeptName": "Engineering"
+    "empName": "Anita Sharma",
+    "empEmail": "anita.sharma@example.com",
+    "assignedDate": "2025-08-23T16:00:00",
+    "department": {
+      "deptId": 1,
+      "deptName": "IT Department"
+    }
   }
 ]
 
-C) Change the department of an employee
 
-First create another department:
+Method: PUT
+URL: http://localhost:8080/employees/2/department/2
 
-POST http://localhost:8080/api/departments
-Content-Type: application/json
-
-
-Body
-
-{ "deptName": "HR", "employees": [] }
-
-
-Now move employee empId = 2 (Ravi) from Engineering → HR:
-
-PUT http://localhost:8080/api/employees/2/department
-Content-Type: application/json
-
-
-Body
-
-{ "departmentId": 2 }
-
-
-Response
-
-{ "message": "Department changed successfully" }
-
-D) Verify latest department for employee
-GET http://localhost:8080/api/employees/2/department/latest
-
-
-Response
 
 {
   "empId": 2,
-  "empName": "Ravi Kumar",
-  "empEmail": "ravi@example.com",
-  "latestDeptId": 2,
-  "latestDeptName": "HR"
+  "empName": "Anita Sharma",
+  "empEmail": "anita.sharma@example.com",
+  "assignedDate": "2025-08-23T16:10:00",
+  "department": {
+    "deptId": 2,
+    "deptName": "HR Department"
+  }
 }
 
-E) Verify current employees in Engineering after move
-GET http://localhost:8080/api/departments/1/employees
-
-
-Response
-
-[
-  {
-    "empId": 1,
-    "empName": "Alice Singh",
-    "empEmail": "alice@example.com",
-    "latestDeptId": 1,
-    "latestDeptName": "Engineering"
-  }
-]
